@@ -1,19 +1,27 @@
-provider "docker" {}
-
-resource "docker_image" "jenkins_image" {
-  name         = "custom-jenkins"
-  build {
-    context    = "./"
-    dockerfile = "./Dockerfile"
+terraform {
+  required_providers {
+    docker = {
+      source = "kreuzwerker/docker"
+      version = "~> 2.22.0"
+    }
   }
 }
 
-resource "docker_container" "jenkins_container" {
-  image = docker_image.jenkins_image.name
-  name  = "jenkins-server"
+provider "docker" {}
 
+# Imagen de Docker in Docker (Dind)
+resource "docker_image" "dind_image" {
+  name = "docker:20.10.24-dind"
+}
+
+# Contenedor de Docker in Docker (Dind)
+resource "docker_container" "dind_container" {
+  name  = "docker-dind"
+  image = docker_image.dind_image.name
+  privileged = true
   ports {
-    internal = 8080
-    external = 8085
+    internal = 2375
+    external = 2375
   }
+  restart = "always"
 }
