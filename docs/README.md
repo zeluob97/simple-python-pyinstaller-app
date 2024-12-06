@@ -8,29 +8,28 @@ Este proyecto tiene como objetivo desplegar un servidor Jenkins utilizando un co
 Clona este repositorio en tu máquina local utilizando el siguiente comando:
 
 ```bash
-git clone https://github.com/<tu-usuario>/<tu-repositorio>.git
+git clone https://github.com/zeluob97/simple-python-pyinstaller-app.git
 
 ```
 
-### 2. Acceder a la carpeta docs
-Accedemos desde la terminal a la carpeta 'docs':
+### 2. A
+A
 ```bash
-cd docs
+
 
 ```
 
 ### 3. Crear la imagen personalizada de Jenkins
 Construye la imagen de Docker personalizada para Jenkins utilizando el archivo Dockerfile:
 ```bash
-docker build -t custom-jenkins:latest -f Dockerfile .
+docker build -t custom-jenkins:latest -f docs/Dockerfile .
 
 ```
 
 ### 4. Ejecutar el contenedor de Jenkins
 Inicia el contenedor de Jenkins utilizando la imagen personalizada que acabas de construir:
 ```bash
-docker run -d -p 8085:8080 --name jenkins-server custom-jenkins:latest
-
+docker run --name jenkins-server -u root -p 8085:8080 -v /var/run/docker.sock:/var/run/docker.sock -v jenkins_home:/var/jenkins_home custom-jenkins:latest
 ```
 
 ### 5. Acceder a la interfaz de Jenkins
