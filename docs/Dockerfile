@@ -1,28 +1,19 @@
-FROM jenkins/jenkins:lts
+FROM jenkins/jenkins:2.479.2-jdk17
 
-# Cambia al usuario root para instalar herramientas
 USER root
 
-# Instala Docker, Terraform, Python 3, pip y pyinstaller
-RUN apt-get update && apt-get install -y \
-    docker.io \
-    wget \
-    unzip \
-    python3 \
-    python3-pip \
-    && wget https://releases.hashicorp.com/terraform/1.5.0/terraform_1.5.0_linux_amd64.zip \
-    && unzip terraform_1.5.0_linux_amd64.zip \
-    && mv terraform /usr/local/bin/ \
-    && rm terraform_1.5.0_linux_amd64.zip \
-    && apt-get clean \
-    && pip3 install --break-system-packages --no-cache-dir pyinstaller \
-    && ln -s /usr/bin/python3 /usr/bin/python
+RUN apt-get update && apt-get install -y lsb-release
 
-# Cambia al usuario Jenkins
+RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
+https://download.docker.com/linux/debian/gpg
+
+RUN echo "deb [arch=$(dpkg --print-architecture) \
+signed-by=/usr/share/keyrings/docker-archive-keyring.asc] \
+https://download.docker.com/linux/debian \
+$(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+
+RUN apt-get update && apt-get install -y docker-ce-cli
+
 USER jenkins
 
-# Preinstala plugins necesarios para Jenkins
-RUN jenkins-plugin-cli --plugins workflow-aggregator docker-workflow
-
-# Expone el puerto para Jenkins
-EXPOSE 8080
+RUN jenkins-plugin-cli --plugins "blueocean docker-workflow token-macro json-path-api"
