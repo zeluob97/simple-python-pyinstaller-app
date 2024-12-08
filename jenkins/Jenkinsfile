@@ -33,18 +33,21 @@ pipeline {
         stage('Deliver') { 
             agent any
             environment { 
-                VOLUME = '/var/jenkins_home/workspace/Python-Pipeline/sources:/src'
+                VOLUME = '/mnt/c/path/to/workspace/Python-Pipeline/sources:/src' // Cambia esta ruta
                 IMAGE = 'cdrx/pyinstaller-linux:python2'
             }
             steps {
                 dir(path: env.BUILD_ID) { 
                     unstash(name: 'compiled-results') 
-                    sh "docker run --rm -v ${VOLUME} ${IMAGE} pyinstaller -F add2vals.py" 
+                    // Paso de depuración para listar archivos en /src
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} ls /src"
+                    // Ejecutar PyInstaller
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} pyinstaller -F /src/add2vals.py"
                 }
             }
             post {
                 success {
-                    archiveArtifacts "${env.BUILD_ID}/sources/dist/add2vals" 
+                    archiveArtifacts "sources/dist/add2vals" 
                     sh "docker run --rm -v ${VOLUME} ${IMAGE} rm -rf build dist"
                 }
             }
