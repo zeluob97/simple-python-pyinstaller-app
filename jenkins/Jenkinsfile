@@ -33,7 +33,7 @@ pipeline {
         stage('Deliver') { 
             agent any
             environment { 
-                VOLUME = "${WORKSPACE}/sources:/src"
+                VOLUME = 'D:/Escritorio/UCA/2025/VS/PRACTICAS/ENTREGABLE 3/PARTE 1/simple-python-pyinstaller-app/sources:/src'
                 IMAGE = 'cdrx/pyinstaller-linux:python2'
             }
             steps {
