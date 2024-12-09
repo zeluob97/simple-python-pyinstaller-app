@@ -37,16 +37,17 @@ pipeline {
                 IMAGE = 'cdrx/pyinstaller-linux:python2'
             }
             steps {
-                unstash(name: 'compiled-results') 
-                sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
-                sh "docker run --rm -v ${VOLUME} ${IMAGE} ls -la /src"
-                sh "docker run --rm -v ${VOLUME} ${IMAGE} ls -la /src/dist"
+                dir('workspace') {
+                    unstash(name: 'compiled-results') 
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} pyinstaller -F add2vals.py"
+                    sh "mkdir -p ${WORKSPACE}/dist"
+                    sh "cp /src/dist/add2vals ${WORKSPACE}/dist/"
+                }
             }
             post {
                 success {
-                    archiveArtifacts "src/dist/add2vals" 
-                    sh "docker run --rm -v ${VOLUME} ${IMAGE} rm -rf build dist"
-                }
+                    archiveArtifacts artifacts :'dist/add2vals' 
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} rm -rf /src/build /src/dist"                }
             }
         }
     }
