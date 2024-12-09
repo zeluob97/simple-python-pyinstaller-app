@@ -39,7 +39,7 @@ pipeline {
             steps {
                 dir('workspace') {
                     unstash(name: 'compiled-results') 
-                    sh "docker run --rm -v ${VOLUME} ${IMAGE} pyinstaller -F add2vals.py"
+                    sh "docker run --rm -v ${VOLUME} ${IMAGE} 'pyinstaller -F add2vals.py'"
                     sh "mkdir -p ${WORKSPACE}/dist"
                     sh "cp /src/dist/add2vals ${WORKSPACE}/dist/"
                 }
