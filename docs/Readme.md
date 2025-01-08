@@ -57,8 +57,9 @@ docker logs jenkins-blueocean
 3. Activa la opcion de SCM Polling.
 4. Elige la opción de Pipeline script from SCM.
 5. Elige como SCM> GIT.
-6. Introduce la url de tu repositorio.
-7. Asegurate de definir correctamente la ruta de jenkinsfile, en nuestro caso: docs/jenkinsfile.
+6. Introduce la url de tu repositorio: 'https://github.com/zeluob97/simple-python-pyinstaller-app.git'
+7. Introduce correctamente la rama de tu proyecto, en nuestro caso: '*/main'
+8. Asegurate de definir correctamente la ruta de jenkinsfile, en nuestro caso: docs/jenkinsfile.
 
 
 # Paso 5: Prueba del Pipeline
